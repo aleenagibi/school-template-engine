@@ -61,7 +61,7 @@ http://localhost:5173
 Put sample school repositories inside:
 
 
-backend/school_repos/
+school_repos/
 
 
 
