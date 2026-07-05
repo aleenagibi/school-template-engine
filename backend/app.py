@@ -1,3 +1,4 @@
+from pathlib import Path
 from fastapi import FastAPI
 from routes.scan import router as scan_router
 from routes.schools import router as schools_router
@@ -9,12 +10,18 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 
+# backend/app.py -> parent -> backend
+EXPORTS_DIR = Path(__file__).resolve().parent / "exports"
+EXPORTS_DIR.mkdir(exist_ok=True)
+
 app = FastAPI()
+
 app.mount(
     "/exports",
-    StaticFiles(directory="exports"),
+    StaticFiles(directory=str(EXPORTS_DIR)),
     name="exports"
 )
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -22,6 +29,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 app.include_router(scan_router)
 app.include_router(preview_router)
 app.include_router(schools_router)

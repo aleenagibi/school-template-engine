@@ -1,9 +1,23 @@
-function PreviewPanel({ preview }) {
+function PreviewPanel({ preview, loading }) {
+  if (loading) {
+    return (
+      <div>
+        <h2>Section Preview</h2>
+        <p className="status-text">Loading preview...</p>
+      </div>
+    );
+  }
+
   if (!preview) return null;
 
   return (
     <div>
-      <h2>Section Preview</h2>
+      <h2>
+        Section Preview
+        <span className="preview-context">
+          {preview.school} — {preview.section_name}
+        </span>
+      </h2>
 
       <div className="preview-section">
         <h3>JSX</h3>

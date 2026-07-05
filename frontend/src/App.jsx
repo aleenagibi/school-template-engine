@@ -1,40 +1,93 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import API from "./api";
 import SchoolList from "./components/SchoolList";
 import SectionList from "./components/SectionList";
 import PreviewPanel from "./components/PreviewPanel";
 import AssemblePanel from "./components/AssemblePanel";
 import TemplateCanvas from "./components/TemplateCanvas";
+import ThemeToggle from "./components/ThemeToggle";
 import "./App.css";
 
 function App() {
   const [selectedSchool, setSelectedSchool] = useState(null);
-
   const [preview, setPreview] = useState(null);
-
   const [selectedSections, setSelectedSections] = useState([]);
-
   const [activeTab, setActiveTab] = useState("schools");
+  const [previewLoading, setPreviewLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
+
+  const [theme, setTheme] = useState(
+    () => localStorage.getItem("stie-theme") || "dark"
+  );
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("stie-theme", theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === "dark" ? "light" : "dark"));
+  };
+
+  const handleSchoolSelect = (school) => {
+    setSelectedSchool(school);
+    setActiveTab("sections");
+  };
 
   const loadPreview = async (school, section_name) => {
-    const res = await API.get(`/preview/${school}/${section_name}`);
-    setPreview(res.data);
+    setPreviewLoading(true);
+    setErrorMessage(null);
+
+    try {
+      const res = await API.get(`/preview/${school}/${section_name}`);
+      setPreview(res.data);
+    } catch (err) {
+      console.error("Failed to load preview:", err);
+      setPreview(null);
+      setErrorMessage(
+        `Could not load preview for "${section_name}". It may no longer exist — try re-scanning.`
+      );
+    } finally {
+      setPreviewLoading(false);
+    }
   };
 
   const addSection = (section) => {
     setSelectedSections((prev) => {
-      const exists = prev.find((s) => s.section_name === section.section_name);
-
+      const exists = prev.find(
+        (s) => s.section_name === section.section_name
+      );
       if (exists) return prev;
-
       return [...prev, section];
     });
   };
 
   return (
     <div className="app-container">
+      <header className="app-header">
+        <div className="app-header-title">
+          <span className="app-header-mark">STIE</span>
+          <span className="app-header-name">
+            School Template Intelligence System
+          </span>
+        </div>
+
+        <ThemeToggle theme={theme} onToggle={toggleTheme} />
+      </header>
+
+      {errorMessage && (
+        <div className="error-banner">
+          {errorMessage}
+          <button
+            className="error-dismiss"
+            onClick={() => setErrorMessage(null)}
+          >
+            ×
+          </button>
+        </div>
+      )}
+
       <div className="workspace">
-        {/* LEFT PANEL */}
         <div className="left-panel">
           <div className="tabs">
             <button
@@ -47,6 +100,7 @@ function App() {
             <button
               className={activeTab === "sections" ? "tab active" : "tab"}
               onClick={() => setActiveTab("sections")}
+              disabled={!selectedSchool}
             >
               Sections
             </button>
@@ -54,7 +108,7 @@ function App() {
 
           {activeTab === "schools" && (
             <SchoolList
-              onSelect={setSelectedSchool}
+              onSelect={handleSchoolSelect}
               selectedSchool={selectedSchool}
             />
           )}
@@ -64,23 +118,21 @@ function App() {
               school={selectedSchool}
               onPreview={loadPreview}
               onAdd={addSection}
+              selectedSections={selectedSections}
             />
           )}
         </div>
 
-        {/* CENTER */}
         <TemplateCanvas
           selectedSections={selectedSections}
           setSelectedSections={setSelectedSections}
         />
 
-        {/* RIGHT */}
         <div className="right-panel">
-          <PreviewPanel preview={preview} />
+          <PreviewPanel preview={preview} loading={previewLoading} />
         </div>
       </div>
 
-      {/* BOTTOM */}
       <div className="bottom-panel">
         <AssemblePanel selected={selectedSections} />
       </div>

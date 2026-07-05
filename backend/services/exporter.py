@@ -1,11 +1,15 @@
 import os
 import zipfile
+from pathlib import Path
 from services.component_graph import resolve_dependencies
 from services.class_conflict_resolver import rename_classes
 
+# backend/services/exporter.py -> parent -> services -> parent.parent -> backend
+EXPORTS_DIR = Path(__file__).resolve().parent.parent / "exports"
+
 
 def export_sections(selected_sections, all_sections):
-    os.makedirs("exports", exist_ok=True)
+    EXPORTS_DIR.mkdir(exist_ok=True)
 
     final_sections = []
 
@@ -28,9 +32,9 @@ def export_sections(selected_sections, all_sections):
         combined_jsx += section["jsx_code"] + "\n\n"
         combined_css += section["css_code"] + "\n\n"
 
-    jsx_path = "exports/CombinedPage.jsx"
-    css_path = "exports/CombinedPage.css"
-    zip_path = "exports/CombinedExport.zip"
+    jsx_path = EXPORTS_DIR / "CombinedPage.jsx"
+    css_path = EXPORTS_DIR / "CombinedPage.css"
+    zip_path = EXPORTS_DIR / "CombinedExport.zip"
 
     with open(jsx_path, "w", encoding="utf-8") as f:
         f.write(combined_jsx)
@@ -46,10 +50,9 @@ def export_sections(selected_sections, all_sections):
             jsx_path,
             arcname="CombinedPage.jsx"
         )
-
         zipf.write(
             css_path,
             arcname="CombinedPage.css"
         )
 
-    return zip_path
+    return zip_path.name   # just "CombinedExport.zip"

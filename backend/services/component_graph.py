@@ -16,11 +16,11 @@ def resolve_dependencies(section, all_sections):
 
         imports = current_section.get("imports", [])
 
-        for imported_name, _ in imports:
+        for imported_name, _module_path in imports:
             for sec in all_sections:
                 if (
                     sec["school"] == current_section["school"]
-                    and sec["section_name"] == imported_name
+                    and sec.get("component_file") == imported_name
                 ):
                     dfs(sec)
 

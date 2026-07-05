@@ -1,21 +1,6 @@
 import re
 
-
-def rename_classes(section):
-    school_prefix = section["school"].lower()
-
-    jsx_code = section["jsx_code"]
-    css_code = section["css_code"]
-
-    class_pattern = r'className\s*=\s*["\']([^"\']+)["\']'
-    matches = re.findall(class_pattern, jsx_code)
-
-    class_map = {}
-
-    for match in matches:
-        classes = match.split()
-
-        bootstrap_prefixes = [
+BOOTSTRAP_PREFIXES = [
     "col-",
     "row",
     "container",
@@ -33,13 +18,27 @@ def rename_classes(section):
     "m-"
 ]
 
-    for cls in classes:
-        if any(cls.startswith(prefix) for prefix in bootstrap_prefixes):
-            continue
 
-        new_cls = f"{school_prefix}-{cls}"
-        class_map[cls] = new_cls
+def rename_classes(section):
+    school_prefix = section["school"].lower()
 
+    jsx_code = section["jsx_code"]
+    css_code = section["css_code"]
+
+    class_pattern = r'className\s*=\s*["\']([^"\']+)["\']'
+    matches = re.findall(class_pattern, jsx_code)
+
+    class_map = {}
+
+    for match in matches:
+        classes = match.split()
+
+        for cls in classes:
+            if any(cls.startswith(prefix) for prefix in BOOTSTRAP_PREFIXES):
+                continue
+
+            new_cls = f"{school_prefix}-{cls}"
+            class_map[cls] = new_cls
 
     # replace in JSX
     for old_cls, new_cls in class_map.items():

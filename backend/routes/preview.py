@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from services.storage import load_sections
 
 router = APIRouter()
@@ -14,13 +14,16 @@ def preview_section(school: str, section_name: str):
             and section["section_name"].lower() == section_name.lower()
         ):
             return {
-            "school": section["school"],
-            "section_name": section["section_name"],
-            "jsx_code": section["jsx_code"],
-            "css_code": section["css_code"],
-            "imports": section.get("imports", []),
-            "assets": section.get("assets", []),
-            "external_apis": section.get("external_apis", [])
-}
+                "school": section["school"],
+                "section_name": section["section_name"],
+                "jsx_code": section["jsx_code"],
+                "css_code": section["css_code"],
+                "imports": section.get("imports", []),
+                "assets": section.get("assets", []),
+                "external_apis": section.get("external_apis", []),
+            }
 
-    return {"message": "Section not found"}
+    raise HTTPException(
+        status_code=404,
+        detail=f"Section not found: school='{school}', section_name='{section_name}'"
+    )

@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 import re
 
-from services.scanner import scan_school_repos
+from services.scanner import scan_school_repos, SCHOOL_REPOS_DIR
 from services.jsx_parser import (
     find_landing_page,
     extract_inline_sections,
@@ -46,7 +46,7 @@ def extract_primary_class(
 @router.post("/scan")
 def scan():
     schools = scan_school_repos(
-        "../school_repos"
+        str(SCHOOL_REPOS_DIR)
     )
 
     all_sections = []
@@ -56,9 +56,12 @@ def scan():
             school["pages_path"]
         )
 
-        css_file = find_main_css(
-            school["css_path"]
-        )
+        css_file = None
+
+        if school["css_path"]:
+            css_file = find_main_css(
+                school["css_path"]
+            )
 
         # INLINE SECTIONS
         if landing_page:
@@ -95,9 +98,7 @@ def scan():
                 section_name = (
                     extract_primary_class(
                         section["jsx_code"],
-                        section[
-                            "section_name"
-                        ]
+                        section["section_name"]
                     )
                 )
 
@@ -105,12 +106,11 @@ def scan():
                     {
                         "school": school["name"],
                         "section_name": section_name,
-                        "section_type": section[
-                            "section_type"
-                        ],
-                        "jsx_code": section[
-                            "jsx_code"
-                        ],
+                        # Inline sections aren't standalone files,
+                        # so there's no filename identity to track.
+                        "component_file": None,
+                        "section_type": section["section_type"],
+                        "jsx_code": section["jsx_code"],
                         "css_code": css_code,
                         "imports": imports,
                         "assets": assets,
@@ -147,12 +147,16 @@ def scan():
                 )
             )
 
+            # Capture the filename-based identity BEFORE
+            # extract_primary_class potentially overwrites it
+            # with a CSS className. This is what import
+            # statements elsewhere (e.g. "./Header") reference.
+            component_file_name = component["section_name"]
+
             section_name = (
                 extract_primary_class(
                     component["jsx_code"],
-                    component[
-                        "section_name"
-                    ]
+                    component["section_name"]
                 )
             )
 
@@ -160,12 +164,9 @@ def scan():
                 {
                     "school": school["name"],
                     "section_name": section_name,
-                    "section_type": component[
-                        "section_type"
-                    ],
-                    "jsx_code": component[
-                        "jsx_code"
-                    ],
+                    "component_file": component_file_name,
+                    "section_type": component["section_type"],
+                    "jsx_code": component["jsx_code"],
                     "css_code": css_code,
                     "imports": imports,
                     "assets": assets,
@@ -178,7 +179,5 @@ def scan():
 
     return {
         "message": "Real scan complete",
-        "sections_found": len(
-            all_sections
-        ),
+        "sections_found": len(all_sections),
     }
