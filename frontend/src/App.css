@@ -101,9 +101,9 @@
   padding: 0;
   box-sizing: border-box;
 }
-/* html, body{
+html, body{
   overflow-x: hidden;
-} */
+}
 body {
   background: var(--bg);
   font-family: var(--font-body);
@@ -335,6 +335,8 @@ button {
 .section-list {
   counter-reset: section-index;
   margin-top: var(--space-2);
+  max-height: 500px;
+    overflow: scroll;
 }
 
 .section-card {
@@ -418,6 +420,7 @@ button {
   background: transparent;
   border: 1px solid var(--accent-dim);
   color: var(--accent);
+  flex: unset!important;
 }
 
 .preview-btn:hover {
@@ -543,11 +546,15 @@ button {
 /* ============ PREVIEW ============ */
 
 .preview-section {
-  background: var(--bg);
-  border: 1px solid var(--border-soft);
-  border-radius: var(--radius-md);
-  padding: var(--space-3);
-  margin-bottom: var(--space-4);
+    background: var(--bg);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    padding: var(--space-3);
+    margin-bottom: var(--space-4);
+
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
 }
 
 .preview-section h3 {
@@ -569,6 +576,9 @@ button {
   font-family: var(--font-mono);
   color: var(--text);
   border: 1px solid var(--border-soft);
+      white-space: pre-wrap;
+    word-break: break-word;
+    overflow-x: auto;
 }
 
 .preview-context {
@@ -654,6 +664,118 @@ input:focus-visible {
   border-radius: 20px;
 }
 
+
+.compiled-preview {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  padding: var(--space-5);
+}
+
+.compiled-preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-4);
+}
+
+.compiled-preview-header h2 {
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+
+.compiled-code-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+  margin-bottom: var(--space-5);
+}
+
+.edit-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-5);
+  margin-bottom: var(--space-4);
+}
+
+.edit-grid h3 {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-faint);
+  margin-bottom: var(--space-3);
+}
+
+.scroll-list {
+  max-height: 320px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.class-chip {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  background: var(--bg);
+  border: 1px solid var(--border-soft);
+  color: var(--text-muted);
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  margin: 0 6px 6px 0;
+}
+
+.rename-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+.rename-old {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+  min-width: 90px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rename-row input {
+  flex: 1;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 13px;
+}
+
+.color-swatch {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.export-mode-row {
+  display: flex;
+  gap: var(--space-5);
+  margin: var(--space-4) 0;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.export-mode-row label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
 /* ============ RESPONSIVE ============ */
 
 @media (max-width: 1024px) {
@@ -704,5 +826,61 @@ input:focus-visible {
     transition: none !important;
   }
 }
+@media (max-width: 1200px) and (min-width: 1025px) {
+  .workspace {
+    grid-template-columns: 240px 1fr 320px;
+  }
+}
+/* ============ COMPILED PREVIEW — RESPONSIVE ============ */
 
+@media (max-width: 1024px) {
+  .compiled-code-grid,
+  .edit-grid {
+    grid-template-columns: 1fr;
+  }
+}
 
+@media (max-width: 768px) {
+  .compiled-preview {
+    padding: var(--space-4);
+  }
+
+  .compiled-preview-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-3);
+  }
+
+  .export-mode-row {
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .rename-row {
+    flex-wrap: wrap;
+  }
+
+  .rename-old {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .preview-section pre {
+    max-height: 200px;
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  .compiled-preview-header h2 {
+    font-size: 13px;
+  }
+
+  .scroll-list {
+    max-height: 240px;
+  }
+
+  .rename-row input {
+    min-width: 0;
+  }
+}

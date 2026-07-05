@@ -6,9 +6,9 @@ from routes.search import router as search_router
 from routes.assemble import router as assemble_router
 from routes.sections import router as sections_router
 from routes.preview import router as preview_router
+from routes.analyze import router as analyze_router
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-
 
 # backend/app.py -> parent -> backend
 EXPORTS_DIR = Path(__file__).resolve().parent / "exports"
@@ -36,6 +36,7 @@ app.include_router(schools_router)
 app.include_router(search_router)
 app.include_router(assemble_router)
 app.include_router(sections_router)
+app.include_router(analyze_router)
 
 
 @app.get("/")

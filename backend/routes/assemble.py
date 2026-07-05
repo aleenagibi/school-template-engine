@@ -6,7 +6,11 @@ router = APIRouter()
 
 
 @router.post("/assemble")
-def assemble(selected_sections: list[dict] = Body(...)):
+def assemble(payload: dict = Body(...)):
+    selected_sections = payload.get("selected_sections", [])
+    mode = payload.get("mode", "combined")
+    color_rename_map = payload.get("color_rename_map", {})
+
     all_sections = load_sections()
 
     lookup = {
@@ -17,17 +21,14 @@ def assemble(selected_sections: list[dict] = Body(...)):
     selected = []
 
     for item in selected_sections:
-        school = item["school"]
-        section_name = item["section_name"]
-
-        key = (school, section_name)
+        key = (item["school"], item["section_name"])
 
         if key in lookup:
             selected.append(lookup[key])
         else:
             print(
-                f"[assemble] No match for school='{school}', "
-                f"section_name='{section_name}'"
+                f"[assemble] No match for school='{item['school']}', "
+                f"section_name='{item['section_name']}'"
             )
 
     if not selected:
@@ -35,12 +36,12 @@ def assemble(selected_sections: list[dict] = Body(...)):
 
     filename = export_sections(
         selected,
-        all_sections
+        all_sections,
+        mode=mode,
+        color_rename_map=color_rename_map,
     )
-
-    download_url = f"/exports/{filename}"
 
     return {
         "message": "Export complete",
-        "download": download_url
+        "download": f"/exports/{filename}",
     }

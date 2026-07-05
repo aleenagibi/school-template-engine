@@ -3,7 +3,7 @@ import API from "./api";
 import SchoolList from "./components/SchoolList";
 import SectionList from "./components/SectionList";
 import PreviewPanel from "./components/PreviewPanel";
-import AssemblePanel from "./components/AssemblePanel";
+import CompiledPreviewPanel from "./components/CompiledPreviewPanel";
 import TemplateCanvas from "./components/TemplateCanvas";
 import ThemeToggle from "./components/ThemeToggle";
 import "./App.css";
@@ -133,9 +133,9 @@ function App() {
         </div>
       </div>
 
-      <div className="bottom-panel">
-        <AssemblePanel selected={selectedSections} />
-      </div>
+<div className="bottom-panel">
+  <CompiledPreviewPanel selected={selectedSections} />
+</div>
     </div>
   );
 }
