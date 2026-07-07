@@ -35,7 +35,7 @@ def selector_matches(selector, classes):
 def extract_css(css_file, classes):
     if not css_file:
         return ""
-
+    print(f"Parsing CSS: {css_file}")
     sheet = cssutils.parseFile(css_file)
 
     extracted = []
