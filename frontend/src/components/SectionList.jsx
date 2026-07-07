@@ -78,18 +78,19 @@ function SectionList({ school, onPreview, onAdd, selectedSections }) {
                   Preview
                 </button>
 
-                <button
-                  className="add-btn"
-                  disabled={added}
-                  onClick={() =>
-                    onAdd({
-                      school,
-                      section_name: section.section_name,
-                    })
-                  }
-                >
-                  {added ? "Added" : "Add"}
-                </button>
+<button
+  className="add-btn"
+  disabled={added}
+  onClick={() =>
+    onAdd({
+      school,
+      section_name: section.section_name,
+      component_file: section.component_file,
+    })
+  }
+>
+  {added ? "Added" : "Add"}
+</button>
               </div>
             </div>
           );

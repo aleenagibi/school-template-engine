@@ -52,15 +52,15 @@ function App() {
     }
   };
 
-  const addSection = (section) => {
-    setSelectedSections((prev) => {
-      const exists = prev.find(
-        (s) => s.section_name === section.section_name
-      );
-      if (exists) return prev;
-      return [...prev, section];
-    });
-  };
+const addSection = (section) => {
+  setSelectedSections((prev) => {
+    const exists = prev.find((s) => s.section_name === section.section_name);
+    if (exists) return prev;
+
+    const defaultMode = section.component_file ? "separate" : "combine";
+    return [...prev, { ...section, mode: defaultMode }];
+  });
+};
 
   return (
     <div className="app-container">

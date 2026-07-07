@@ -11,7 +11,8 @@ def get_school_sections(school: str):
     filtered_sections = [
         {
             "section_name": section["section_name"],
-            "section_type": section["section_type"]
+            "section_type": section["section_type"],
+            "component_file": section.get("component_file"),
         }
         for section in sections
         if section["school"].lower() == school.lower()
