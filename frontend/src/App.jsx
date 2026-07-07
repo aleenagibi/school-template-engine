@@ -6,6 +6,7 @@ import PreviewPanel from "./components/PreviewPanel";
 import CompiledPreviewPanel from "./components/CompiledPreviewPanel";
 import TemplateCanvas from "./components/TemplateCanvas";
 import ThemeToggle from "./components/ThemeToggle";
+import Footer from "./components/Footer";
 import "./App.css";
 
 function App() {
@@ -136,6 +137,7 @@ const addSection = (section) => {
 <div className="bottom-panel">
   <CompiledPreviewPanel selected={selectedSections} />
 </div>
+<Footer/>
     </div>
   );
 }

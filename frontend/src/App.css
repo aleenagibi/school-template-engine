@@ -846,6 +846,69 @@ input:focus-visible {
   max-height: 250px;
   overflow: auto;
 }
+
+.footer {
+    margin-top: auto;
+    padding: var(--space-4) var(--space-6);
+    border-top: 1px solid var(--border-soft);
+    background: var(--surface);
+}
+
+.footer-content {
+    max-width: 1600px;
+    margin: 0 auto;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+}
+
+.footer-content p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.github-links {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+}
+
+.github-links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+font-size:13px;
+    padding: 8px 14px;
+
+    text-decoration: none;
+    color: var(--text);
+
+    background: var(--surface-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+
+    transition:
+        background var(--transition-fast),
+        color var(--transition-fast),
+        border-color var(--transition-fast),
+        transform var(--transition-fast);
+}
+
+.github-links a:hover {
+    background: var(--accent-dim);
+    border-color: var(--accent);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.github-links svg {
+    flex-shrink: 0;
+}
+
 /* ============ RESPONSIVE ============ */
 
 @media (max-width: 1024px) {
