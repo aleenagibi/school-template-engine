@@ -1,0 +1,6 @@
+venv/
+__pycache__/
+*.pyc
+.git/
+school_repos/*
+!school_repos/.gitkeep
