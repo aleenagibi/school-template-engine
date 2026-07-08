@@ -24,7 +24,7 @@ app.mount(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # tighten to your actual Vercel domain once it exists — see note below
+    allow_origins=["https://school-template-engine.vercel.app"],  # tighten to your actual Vercel domain once it exists — see note below
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

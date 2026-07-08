@@ -7,6 +7,7 @@ import CompiledPreviewPanel from "./components/CompiledPreviewPanel";
 import TemplateCanvas from "./components/TemplateCanvas";
 import ThemeToggle from "./components/ThemeToggle";
 import Footer from "./components/Footer";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import "./App.css";
 
 function App() {
@@ -138,6 +139,7 @@ const addSection = (section) => {
   <CompiledPreviewPanel selected={selectedSections} />
 </div>
 <Footer/>
+<SpeedInsights/>
     </div>
   );
 }
